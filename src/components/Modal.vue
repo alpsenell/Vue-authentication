@@ -75,6 +75,7 @@ export default {
       transform: translate(-50%, -50%);
       z-index: 12;
       width: 50%;
+      height: 50%;
     }
     &__overlay {
       position: fixed;
@@ -104,8 +105,12 @@ export default {
       right: 15px;
     }
     &__description {
-      font-size: $text-font-size;
+      font-size: $description-font-size;
       color: $main-bg;
+      top: 50%;
+      left: 50%;
+      width: 80%;
+      transform: translate(-50%, -50%);
       margin: 25px 0;
     }
   }

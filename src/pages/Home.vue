@@ -215,7 +215,14 @@ export default {
       const { data: { payload: { data } } } = await this.$http.get(this.activeUsersChartUrl);
 
       this.activeUsersChartData = Object.values(data);
-      this.activeUsersChartLabels = Object.keys(data);
+      this.activeUsersChartLabels = Object.keys(data)
+        .map((label) => {
+          const year = label.substr(0, 4);
+          const month = label.substr(4, 2);
+          const day = label.substr(-2);
+
+          return `${year}-${month}-${day}`;
+        });
     },
 
     async fetchDownloadsChartData () {
