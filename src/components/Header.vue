@@ -8,7 +8,7 @@
         v-if="dropdownStatus"
         class="header__content">
         <p>{{ userEmail }}</p>
-        <p>Log Out</p>
+        <p @click="logOut">Log Out</p>
       </div>
     </div>
   </div>
@@ -16,6 +16,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import firebase from 'firebase';
 
 export default {
   data () {
@@ -33,6 +34,12 @@ export default {
   methods: {
     toggleDropdown () {
       this.dropdownStatus = !this.dropdownStatus;
+    },
+
+    logOut () {
+      firebase.auth().signOut().then(() => {
+        this.$router.replace('signin');
+      });
     }
   }
 };
@@ -64,6 +71,7 @@ export default {
       background-color: $white;
       p {
         color: $main-bg;
+        cursor: pointer;
       }
     }
   }

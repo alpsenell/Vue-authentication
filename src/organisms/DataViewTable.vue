@@ -87,6 +87,9 @@ export default {
     grid-template-rows: 1fr auto;
     color: $white;
     $self: &;
+    @media (max-width: 420px) {
+      margin-top: 20px;
+    }
     &__upper-part {
       display: grid;
       grid-template-columns: 50% 50%;

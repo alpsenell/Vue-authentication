@@ -13,21 +13,33 @@
           @refresh="refreshData">
         </data-view-table>
       </div>
+      <data-table
+        id="activeUsers"
+        :chart-data="activeUsersChart">
+      </data-table>
+      <data-table
+        id="dailyDownloads"
+        :chart-data="downloadsChart">
+      </data-table>
     </div>
 </template>
 
 <script>
 import DataViewTable from '@/organisms/DataViewTable.vue';
 import PageHeader from '@/components/Header.vue';
+import DataTable from '@/organisms/DataTable.vue';
+import planetChartData from '@/organisms/chart-data';
 
 export default {
   components: {
     DataViewTable,
-    PageHeader
+    PageHeader,
+    DataTable
   },
 
   data () {
     return {
+      planetChartData,
       config: {
         activeUsers: {
           icon: 'user',
@@ -58,6 +70,12 @@ export default {
           fullName: 'Total paying user count'
         }
       },
+      activeUsersChartData: [],
+      activeUsersChartLabels: [],
+      downloadsChartData: [],
+      downloadsChartLabels: [],
+      activeUsersChartUrl: process.env.VUE_APP_ACTIVE_USERS_CHART_URL,
+      downloadsChartUrl: process.env.VUE_APP_DOWNLOADS_CHART_URL,
       activeUsersUrl: process.env.VUE_APP_ACTIVE_USERS_URL,
       downloadsUrl: process.env.VUE_APP_DOWNLOADS_URL,
       averageSessionDurationUrl: process.env.VUE_APP_SESSION_DURATION_URL,
@@ -70,8 +88,100 @@ export default {
       this.fetchActiveUsers(),
       this.fetchDownloads(),
       this.fetchAverageSessionDuration(),
-      this.fetchPaidUsers()
+      this.fetchPaidUsers(),
+      this.fetchActiveUsersChartData(),
+      this.fetchDownloadsChartData()
     ]);
+  },
+
+  computed: {
+    /**
+     * @return {object}
+     */
+    activeUsersChart () {
+      return {
+        type: 'line',
+        data: {
+          labels: this.activeUsersChartLabels,
+          datasets: [
+            {
+              label: 'Number of Users',
+              data: this.activeUsersChartData,
+              backgroundColor: 'rgba(177,95,229, 0.2)',
+              borderColor: '#b15fe5',
+              pointBorderColor: '#b15fe5',
+              borderWidth: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          lineTension: 1,
+          title: {
+            display: true,
+            text: 'Daily Active Users',
+            align: 'start',
+            fontSize: 28,
+            fontColor: 'white'
+          },
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                padding: 25
+              }
+            }]
+          }
+        }
+      };
+    },
+
+    /**
+     * @return {object}
+     */
+    downloadsChart () {
+      return {
+        type: 'line',
+        data: {
+          labels: this.downloadsChartLabels,
+          datasets: [
+            {
+              label: 'Number of Users',
+              data: this.downloadsChartData,
+              backgroundColor: 'rgba(177,95,229, 0.2)',
+              borderColor: '#b15fe5',
+              pointBorderColor: '#b15fe5',
+              borderWidth: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          lineTension: 1,
+          title: {
+            display: true,
+            text: 'Daily Installs',
+            align: 'start',
+            fontSize: 28,
+            fontColor: 'white'
+          },
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                padding: 25
+              }
+            }]
+          }
+        }
+      };
+    }
   },
 
   methods: {
@@ -101,6 +211,20 @@ export default {
       this.config.paidUsers.data = paidUsers;
     },
 
+    async fetchActiveUsersChartData () {
+      const { data: { payload: { data } } } = await this.$http.get(this.activeUsersChartUrl);
+
+      this.activeUsersChartData = Object.values(data);
+      this.activeUsersChartLabels = Object.keys(data);
+    },
+
+    async fetchDownloadsChartData () {
+      const { data: { payload: { data } } } = await this.$http.get(this.downloadsChartUrl);
+
+      this.downloadsChartData = Object.values(data);
+      this.downloadsChartLabels = Object.keys(data);
+    },
+
     refreshData (refreshKey) {
       this.config[refreshKey].data = '';
 
@@ -117,11 +241,14 @@ export default {
 
   .home {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     background-color: $main-bg;
     .data-tables {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
+      @media (max-width: 420px) {
+        display: block;
+      }
     }
   }
 </style>

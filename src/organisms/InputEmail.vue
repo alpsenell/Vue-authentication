@@ -59,6 +59,9 @@ export default {
       transform: translateX(-50%);
       width: 100%;
       z-index: 2;
+      @media (max-width: 420px) {
+        font-size: $small-font-size;
+      }
     }
   }
 </style>
