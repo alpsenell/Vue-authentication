@@ -22,6 +22,8 @@ module.exports = {
       }
     ],
     'space-before-function-paren': ['error', 'always'],
+    'no-bitwise': 'off',
+    'vue/require-prop-type-constructor': 'off',
     'comma-dangle': ['error', 'never']
   },
 };
