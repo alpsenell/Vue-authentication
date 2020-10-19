@@ -1,6 +1,6 @@
 # Vue Authentication & Data Dashboard App
 
-##Important!
+## Important!
 Dummy user login info!!!
 ```
 alp@alp.com
